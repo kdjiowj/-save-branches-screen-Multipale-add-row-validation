@@ -1,0 +1,472 @@
+
+@{
+    ViewData["Title"] = "SystemConfiguration";
+    Layout = "~/Views/Shared/LandingFinal.cshtml";
+}
+
+@*this hidden fields is used for button rights enabled or
+    disabled it is used at landing final page onload js event  *@
+<input type="hidden" id="screenId" name="screenid" value="@ViewBag.ButtonRightsScreenId" />
+<input type="hidden" id="Role" name="screenid" value="@ViewBag.Role" />
+<input type="hidden" id="IsCv" name="screenid" value="@ViewBag.IsCv" />
+<input type="hidden" id="hdnUrl" name="hdnUrl" value="@ViewBag.Config" />
+<link rel="stylesheet" type="text/css" href="/css/CustomControl.css">
+<script type="text/javascript" src="/material-pro/dist/js/custom.js"></script>
+
+<style>
+    .fixTableHead {
+        overflow: auto;
+        height: 120px;
+    }
+
+        .fixTableHead thead th {
+            position: sticky;
+            top: 0;
+            background-color: RGB(207,236,254);
+        }
+</style>
+<script type="text/javascript">
+
+    $(document).on("click", "#btnAddNewDatabase", function () {
+      
+        var DRowCount = document.getElementById("TableDataBaseConfig").rows.length;
+        
+        var ResultTable = '<tr id="MainTr">' +
+            '<td><input name="gvtxtSrNo" id="gvtxtSrNo"  value="' + DRowCount +'" class="form-control form-control-sm" style="border: none !important; background: none" type="text" /></td>' +
+            '<td> <input name="gvtxtServerIP" id="gvtxtServerIP" class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td>' +
+            '<td> <input name="gvtxtDataBaseName" id="gvtxtDataBaseName"    class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td>' +
+            '<td> <input name="gvtxtDataBaseVersion" id="gvtxtDataBaseVersion"  class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td > ' +
+            '<td> <input name="gvtxtUserId"  id="gvtxtUserId"   class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td>' +
+            '<td> <input name="gvtxtPassword" id="gvtxtPassword"  class="form-control form-control-sm" style="border: none !important; background: none" type="text" /></td>' +
+            '<td> <input type="button" id="btnDeleteRowDataBase" value="Remove" class="btnDeleteRow btn btn btn-danger btn-xs"/></td>' +
+            '</tr>';
+        $("#TableDataBaseConfig").append(ResultTable);
+     
+
+    });
+
+    $(document).on("click", "#btnDeleteRowDataBase", function () {
+        var qrowCount = document.getElementById("TableDataBaseConfig").rows.length;
+      
+        if (qrowCount > 1 && qrowCount != 2) {
+            $(this).closest("tr").remove();
+        }
+        $('#TableDataBaseConfig tbody tr').each(function (index) {
+
+            $(this).find("td:eq(0) input[type='text']").val(index + 1);
+        });
+
+    });
+
+
+    $(document).on("click", "#btnAddNewBranch", function () {
+
+        var DRowCount = document.getElementById("TableBranchConfig").rows.length;
+
+        var ResultTable = '<tr id="MainTr">' +
+            '<td><input name="gvtxtSrNo" id="gvtxtSrNo"  value="' + DRowCount + '" class="form-control form-control-sm" style="border: none !important; background: none" type="text" /></td>' +
+            '<td> <input name="gvtxtDataBaseName" id="gvtxtDataBaseName"    class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td>' +
+            '<td> <input name="gvtxtBranchCode" id="gvtxtBranchCode"  class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td > ' +
+            '<td> <input name="gvtxtBranchName"  id="gvtxtBranchName"   class="form-control form-control-sm" style="border: none !important; background: none" type="text"  ></td>' +
+            '<td> <input name="gvtxtSubAccountId" id="gvtxtSubAccountId"  class="form-control form-control-sm" style="border: none !important; background: none" type="text" /></td>' +
+            '<td> <input type="button" id="btnDeleteBranchRow" value="Remove" class="btnDeleteRow btn btn btn-danger btn-xs"/></td>' +
+            '</tr>';
+        $("#TableBranchConfig").append(ResultTable);
+
+
+    });
+    alert('check');
+    $(document).on("click", "#btnDeleteBranchRow", function () {
+        var qrowCount = document.getElementById("TableBranchConfig").rows.length;
+
+        if (qrowCount > 1 && qrowCount != 2) {
+            $(this).closest("tr").remove();
+        }
+        $('#TableBranchConfig tbody tr').each(function (index) {
+
+            $(this).find("td:eq(0) input[type='text']").val(index + 1);
+        });
+
+    });
+
+  $(document).on("click", "#BtnSubmitBranchConfig", function () {
+      alert('raj');
+      var validate = true;
+        var Error = "";
+        $('#TableBranchConfig tbody tr').each(function (i, row) {
+            var j = i + 1;
+            var $row = $(row);
+            var gvtxtDataBaseName  = $row.find('input[name*="gvtxtDataBaseName"]').val();
+            if (gvtxtDataBaseName == "") {
+                validate = false;
+                Error = 'Please Enter DataBaseName' + ' at Line # ' + (j);
+                $row.find('input[name*="gvtxtDataBaseName"]').focus();
+                alert('please enter DataBaseName');
+                return false;
+            }
+            var gvtxtBranchCode = $row.find('input[name*="gvtxtBranchCode"]').val();
+            if (gvtxtBranchCode == "") {
+                validate = false;
+                Error = 'Please Enter BranchCode' + ' at Line # ' + (j);
+                $row.find('input[name*="gvtxtBranchCode"]').focus();
+                 alert('please enter BranchCode');
+
+                return false;
+            }
+     var gvtxtBranchName = $row.find('input[name*="gvtxtBranchName"]').val();
+            if (gvtxtBranchName == "") {
+                validate = false;
+                Error = 'Please Enter BranchName' + ' at Line # ' + (j);
+                $row.find('input[name*="gvtxtBranchName"]').focus();
+                 alert('please enter BranchName');
+
+                return false;
+            }
+            var gvtxtSubAccountId = $row.find('input[name*="gvtxtSubAccountId"]').val();
+            if (gvtxtSubAccountId == "") {
+                validate = false;
+                Error = 'Please Enter SubAccountId' + ' at Line # ' + (j);
+                $row.find('input[name*="gvtxtSubAccountId"]').focus();
+                 alert('please enter SubAccountId');
+
+                return false;
+            }
+            });  
+
+
+
+        var  DataBaseConfiguration = new Array();
+        $("#TableBranchConfigBody tr").each(function () {
+            var $row = $(this);
+            var SaveDatabases  = {};
+
+           SaveDatabases.DataBaseName = $row.find('input[name*="gvtxtDataBaseName"]').val();
+           alert( SaveDatabases.DataBaseName);
+           alert(row.find('input[name*="gvtxtDataBaseName"]').val())
+           SaveDatabases.BranchCode = row.find('input[name*="gvtxtBranchCode"]').val();
+           SaveDatabases.BranchName=  row.find('input[name*="gvtxtBranchName"]').val();
+           SaveDatabases.SubAccountId = row.find('input[name*="gvtxtSubAccountId"]').val();
+            DataBaseConfiguration.push(SaveDatabases);
+
+           
+            
+            $.ajax({
+            type: "POST",
+            url: "/SystemSetting/SystemConfigurationDb",
+            data: { DataBaseConfiguration: DataBaseConfiguration },
+            success: function (data) {
+                toastr.success(data, 'Done..', { "closeButton": true });
+
+                document.getElementById("BtnSubmitBranchConfig").style.display = "block";
+
+            },
+            error: function (error) {
+                var Result = error.responseText.replace("message", "").replace('""', "").replace("{", "").replace("}", "").replace('"', "").replace(":", "").replace('"', "");
+                toastr.error(Result, 'Error..', { "closeButton": true });
+                document.getElementById("BtnSubmitBranchConfig").style.display = "block";
+
+            }
+        });
+
+
+
+
+        });
+
+
+
+
+
+
+
+        });
+
+     
+        
+
+
+
+
+</script>
+
+<div id="divSpinner" style="display:none">
+    @Html.Partial("ProgressSpinner")
+</div>
+<!-- -------------------------------------------------------------- -->
+<!-- Bread crumb and right sidebar toggle -->
+<!-- -------------------------------------------------------------- -->
+<div class="row page-titles bg-white align-middle">
+    <div class="col-md-12 col-12 align-self-center">
+        <div class="row">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb font-22">
+                        @if (Context.Session.GetString("Role").ToString().Trim() == "S" || Context.Session.GetString("Role").ToString().Trim() == "BU")
+                        {
+                            <li class="breadcrumb-item"><a asp-controller="Select" asp-action="SelectPortal" class="text-info"><i data-feather="home" class="feather-sm fill-white"></i></a></li>
+                        }
+                        else
+                        {
+                            <li class="breadcrumb-item"><a asp-controller="Menu" asp-action="MenuDetails" asp-route-id="100" class="text-info"><i data-feather="home" class="feather-sm fill-white"></i></a></li>
+
+                        }
+                        <li class="breadcrumb-item"><a class="text-info">@ViewContext.RouteData.Values["controller"].ToString()</a></li>
+                        <li class="breadcrumb-item active text-info font-weight-medium" aria-current="page"><a class="text-info">@ViewContext.RouteData.Values["action"].ToString()</a></li>
+
+                    </ol>
+
+                </nav>
+            </div>
+            <div class="col-md-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb font-22">
+                        <li>
+                            <div class="d-flex me-3 ms-2">
+                                <div class="chart-text me-2">
+
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+
+                </nav>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- -------------------------------------------------------------- -->
+<!-- End Bread crumb and right sidebar toggle -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="tab-content">
+
+            <div class="card mb-2">
+                <div class="card-body">
+                    <fieldset>
+                        <legend style="background-color:cadetblue;font-family:Verdana;font-size:15px;font-weight:bold" class="text-dark">&nbsp;&nbsp;DataBase Configurations</legend>
+                        <div class="row mt-4">
+                            <div class="col-md-2">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Database Server: </label>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="success-radio" style="font-family:Verdana;font-weight:bold;font-size:11px">
+                                        <input class="form-check-input success" type="radio" name="radio-solid-success" id="success-radio" value="option1">
+                                        HANA
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="success2-radio" style="font-family:Verdana;font-weight:bold;font-size:11px">
+                                        <input class="form-check-input success" type="radio" name="radio-solid-success" id="success2-radio" value="option1" checked>
+                                        SQL SERVER
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-2">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Database Connections: </label>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="fixTableHead" id="Grid" style="width:95%">
+                                <table id="TableDataBaseConfig" class="table table-striped table-bordered  table-hover bg-white">
+                                    <thead class="bg-light-info text-dark">
+                                        <tr>
+                                            <th width="1%" style="font-family: Verdana; font-size: 11px; font-weight: bold">Sr.No</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Server IP</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">DataBase Name</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">DataBase Version</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">UserId</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Password</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Remove</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="TableDataBaseConfigBody">
+                                        <tr id="MainTr">
+                                            <td>
+                                                <input readonly="readonly" name="gvtxtSrNo" value="1" id="gvtxtSrNo" class="form-control form-control-sm" style="border: none !important; background: none" type="text" onkeypress="return false;">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtServerIP" id="gvtxtServerIP" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtDataBaseName" id="gvtxtDataBaseName" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtDataBaseVersion" id="gvtxtDataBaseVersion" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtUserId" id="gvtxtUserId" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtPassword" id="gvtxtPassword" type="text" class="form-control form-control-sm" style="border: none !important; background: none">
+                                            </td>
+                                            <td>
+                                                <button value="Remove" class="btnDeleteRow btn btn btn-danger btn-xs" id="btnDeleteRowDataBase" type="button">Remove</button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-2">
+                                <button value="AddNewRow" class="btnDeleteRow btn btn btn-danger btn-xs" id="btnAddNewDatabase" type="button">New Row</button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-2">
+                                <button type="button" id="BtnSubmitDatabaseConfig" class="btn waves-effect waves-light btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="BtnSubmit" onclick="return SaveData(id);">Save Database</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br />
+                    <fieldset>
+                        <legend style="background-color:cadetblue;font-family:Verdana;font-size:15px;font-weight:bold" class="text-dark">&nbsp;&nbsp;Branches Configurations</legend>
+                        <div class="row mt-4">
+                            <div class="col-md-2">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Branch Enabled: </label>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bt-switch">
+                                    <input type="checkbox" data-on-color="success" data-size="small" data-off-color="info" data-on-text="Yes" data-off-text="No">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-2">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Branches Detailing: </label>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="fixTableHead" id="Grid" style="width:95%">
+                                <table id="TableBranchConfig" class="table table-striped table-bordered  table-hover bg-white">
+                                    <thead class="bg-light-info text-dark">
+                                        <tr>
+                                            <th width="1%" style="font-family: Verdana; font-size: 11px; font-weight: bold">Sr.No</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">DataBase Name</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Branch Code</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Branch Name</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Sub Acoounts Id</th>
+                                            <th class="col-md-1" style="font-family: Verdana; font-size: 11px; font-weight: bold">Remove</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="TableBranchConfigBody">
+                                        <tr id="MainTr">
+                                            <td>
+                                                <input readonly="readonly" name="gvtxtSrNo" id="gvtxtSrNo" value="1" class="form-control form-control-sm" style="border: none !important; background: none" type="text" onkeypress="return false;">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtDataBaseName" id="gvtxtDataBaseName" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtBranchCode" id="gvtxtBranchCode" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtBranchName" id="gvtxtBranchName" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <input name="gvtxtSubAccountId" id="gvtxtSubAccountId" class="form-control form-control-sm" style="border: none !important; background: none" type="text">
+                                            </td>
+                                            <td>
+                                                <button value="Remove" class="btnDeleteRow btn btn btn-danger btn-xs" id="btnDeleteBranchRow" type="button">Remove</button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-2">
+                                <button value="AddNewRow" class="btnDeleteRow btn btn btn-danger btn-xs" id="btnAddNewBranch" type="button">New Row</button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-2">
+                                <button type="button" id="BtnSubmitBranchConfig" class="btn waves-effect waves-light btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="BtnSubmit" onclick="return SaveData(id);">Save Branches</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br />
+                    <fieldset>
+                        <legend style="background-color:cadetblue;font-family:Verdana;font-size:15px;font-weight:bold" class="text-dark">&nbsp;&nbsp;Portal Configurations</legend>
+                        <div class="row mt-4">
+                            <div class="col-md-2">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Portals Visiblity: </label>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-check-inline">
+
+                                    <label class="form-check-label" for="success-outline-check" style="font-family: Verdana; font-size: 11px; font-weight: bold">
+                                        <input class="form-check-input success check-outline outline-success" style="height:15px;width:15px" type="checkbox" id="chkCustomer" value="Customer">
+                                        &nbsp;Customer Portal
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="success-outline-check" style="font-family: Verdana; font-size: 11px; font-weight: bold">
+                                        <input class="form-check-input success check-outline outline-success" style="height:15px;width:15px" type="checkbox" id="chkVendor" value="Vendor">
+                                        &nbsp;Vendor Portal
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-2">
+                                <button type="button" id="BtnSubmitPortalConfig" class="btn waves-effect waves-light btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="BtnSubmit" onclick="return SaveData(id);">Save Portals</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <br />
+                    <fieldset>
+                        <legend style="background-color:cadetblue;font-family:Verdana;font-size:15px;font-weight:bold" class="text-dark">&nbsp;&nbsp;Profile</legend>
+                        <div class="row mt-4">
+                            <div class="col-md-1">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Name: </label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="txtProfileName" name="example-input-small" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-1">
+                                <label class="form-control-label text-dark" style="font-family:Verdana;font-weight:bold;font-size:11px">&nbsp;&nbsp;Logo: </label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="file" id="txtProfileName" name="example-input-small" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-2">
+                                <button type="button" id="BtnSubmitProfileConfig" class="btn waves-effect waves-light btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="BtnSubmit" onclick="return SaveData(id);">Save Profile</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="card mb-2">
+             
+            </div>
+            
+            <hr style="margin-top:0px" />
+            <div class="card mb-2 bg-body">
+
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,99 @@
+using Microsoft.AspNetCore.Mvc;
+using System.Collections;
+using System.Data;
+using CustomerVendorPortal.Models.Business_Utility;
+namespace CustomerVendorPortal.Controllers
+{
+    public class SystemSetting : Controller
+    {
+        Hashtable objht = new Hashtable();
+        SystemSettings objAcc = new SystemSettings();
+
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+        [Route("/SystemSetting/SystemConfiguration/{id}")]
+
+        [ActionName("System Configurations")]
+        public IActionResult SystemConfiguration(string id)
+        {
+            ViewBag.ButtonRightsScreenId = id;
+            ViewBag.Role = HttpContext.Session.GetString("Role").ToString().Trim();
+            ViewBag.IsCv = HttpContext.Session.GetString("CVP").ToString().Trim();
+            ViewBag.Code = HttpContext.Session.GetString("Code").ToString().Trim();
+            return View("SystemConfiguration");
+
+        }
+        private DataTable CreateTableDetail()
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("DataBaseName");
+            dataTable.Columns.Add("BranchCode");
+            dataTable.Columns.Add("BranchName");
+            dataTable.Columns.Add("SubAccountId");
+            
+
+
+            return dataTable;
+        }
+        public JsonResult SystemConfigurationDb(List<SystemSettingsInfo> DataBaseConfiguration)
+        {
+            try
+            {
+                DataTable dtDetail = CreateTableDetail();
+                if (DataBaseConfiguration.Count > 0)
+                {
+                    for (int i = 0; i < DataBaseConfiguration.Count; i++)
+                    {
+                        SystemSettingsInfo objAcc = DataBaseConfiguration[i];
+
+                        DataRow dr = dtDetail.NewRow();
+                        dr[0] = objAcc.DataBaseName;
+                        dr[1] = objAcc.BranchCode;
+                        dr[2] = objAcc.BranchName;
+                        dr[3] = objAcc.SubAccountId;
+                        
+                        dtDetail.Rows.Add(dr);
+                    }
+
+                }
+                if (dtDetail.Rows.Count > 0)
+                {
+                    DataSet ds = new DataSet("Dataset");
+                    dtDetail.TableName = "Datatable";
+                    ds.Tables.Add(dtDetail);
+                    string xmlData = ds.GetXml();
+
+                    objht.Clear();
+                    //objht.Add("User", HttpContext.Session.GetString(""));
+                    objht.Add("Data", xmlData);
+                    objAcc.ht = objht;
+                    string Result = objAcc.SaveData();
+                    if (Result != "-1")
+                    {
+                        return new JsonResult(Result) { Value = Result, StatusCode = 200 };
+                    }
+                    else
+                    {
+                        return new JsonResult("some error occured") { Value = "some error occured", StatusCode = 500 };
+
+                    }
+                }
+                else
+                {
+
+                    return new JsonResult(new { message = "aaa" }) { StatusCode = 500 };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message) { Value = ex.Message, StatusCode = 500 };
+
+            }
+        }
+
+    }
+}

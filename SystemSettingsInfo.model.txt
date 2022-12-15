@@ -1,0 +1,10 @@
+namespace CustomerVendorPortal.Controllers
+{
+    public class SystemSettingsInfo
+    {
+        public string DataBaseName { get; set;}
+        public string BranchCode { get; set; }
+        public string BranchName { get; set; }
+        public string SubAccountId { get; set; }
+    }
+}

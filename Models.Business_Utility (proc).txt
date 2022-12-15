@@ -1,0 +1,21 @@
+using Customer_Vendor_Portal.Models.Classes;
+using MiSAP.Models;
+using System.Collections;
+using System.Data.SqlClient;
+namespace CustomerVendorPortal.Models.Business_Utility
+{
+    public class SystemSettings
+    {
+        Dal_SQL objdal = new Dal_SQL();
+        public Hashtable ht = new Hashtable();
+
+
+
+        public string SaveData()
+        {
+
+            return objdal.StringExecuteNonQuery("CBS_VENDOR_CUSTOMER_CONFIG_BRANCH_PRI", ht);
+
+        }
+    }
+}
